@@ -122,6 +122,18 @@ The softphone exposes the following resources on port `6060`.
 <td>UnHold call with specified <code>call_id</code></td>
 </tr>
 <tr>
+<td><code>/calls/{call_id}/mute</code></td>
+<td>PUT</td>
+<td></td>
+<td>Mute call with specified <code>call_id</code></td>
+</tr>
+<tr>
+<td><code>/calls/{call_id}/mute</code></td>
+<td>DELETE</td>
+<td></td>
+<td>UnMute call with specified <code>call_id</code></td>
+</tr>
+<tr>
 <td><code>/calls/{call_id}/conference</code></td>
 <td>PUT</td>
 <td></td>
