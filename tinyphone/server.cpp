@@ -554,6 +554,45 @@ void TinyPhoneHttpServer::Start() {
 		}
 	});
 
+	CROW_ROUTE(app, "/calls/<int>/mute")
+		.methods("PUT"_method, "DELETE"_method)
+		([&phone](const crow::request& req, int call_id) {
+
+		pj_thread_auto_register();
+		SIPCall* call = phone.CallById(call_id);
+		if (call == nullptr) {
+			return tp::response(400, {
+				{ "message", "Call Not Found" },
+				{ "call_id" , call_id }
+			});
+		}
+		else {
+			json response;
+			bool status;
+			switch (req.method) {
+				case crow::HTTPMethod::Put:
+					status = call->MuteCall();
+					response = {
+						{ "message",  "Mute Triggered" },
+						{ "call_id" , call_id },
+						{ "status" , status }
+					};
+					break;
+				case crow::HTTPMethod::Delete:
+					status = call->UnMuteCall();
+					response = {
+						{ "message",  "UnMute Triggered" },
+						{ "call_id" , call_id },
+						{ "status" , status }
+					};
+					break;
+				default:
+					break;
+			}
+			return tp::response(202, response);
+		}
+	});
+
 	CROW_ROUTE(app, "/calls/<int>/conference")
 		.methods("PUT"_method, "DELETE"_method)
 		([&phone](const crow::request& req,int call_id) {

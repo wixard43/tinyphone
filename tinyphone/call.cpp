@@ -173,6 +173,52 @@ namespace tp {
 		return false;
 	}
 
+	bool SIPCall::MuteCall() {
+
+		auto call_info = getInfo();
+		if (call_info.state == PJSIP_INV_STATE_CONFIRMED) {
+			if (call_info.media.size() > 0) {
+				try {
+					AudioMedia aud_med = getAudioMedia(-1);
+					pjsua_conf_adjust_tx_level(aud_med.getPortId(), 0.0f);
+					PJ_LOG(3, (__FILENAME__, "Call %d Mute Triggered", call_info.id));
+					return true;
+				}
+				catch (...) {
+					PJ_LOG(3, (__FILENAME__, "Mute Failed, Media Not Found"));
+				}
+			}
+			else
+				PJ_LOG(3, (__FILENAME__, "Mute Failed, Call Doesn't have any media"));
+		}
+		else
+			PJ_LOG(3, (__FILENAME__, "Mute Failed, Call Not in Confirmed State"));
+		return false;
+	}
+
+	bool SIPCall::UnMuteCall() {
+
+		auto call_info = getInfo();
+		if (call_info.state == PJSIP_INV_STATE_CONFIRMED) {
+			if (call_info.media.size() > 0) {
+				try {
+					AudioMedia aud_med = getAudioMedia(-1);
+					pjsua_conf_adjust_tx_level(aud_med.getPortId(), 1.0f);
+					PJ_LOG(3, (__FILENAME__, "Call %d UnMute Triggered", call_info.id));
+					return true;
+				}
+				catch (...) {
+					PJ_LOG(3, (__FILENAME__, "UnMute Failed, Media Not Found"));
+				}
+			}
+			else
+				PJ_LOG(3, (__FILENAME__, "UnMute Failed, Call Doesn't have any media"));
+		}
+		else
+			PJ_LOG(3, (__FILENAME__, "UnMute Failed, Call Not in Confirmed State"));
+		return false;
+	}
+
 	void SIPCall::onCallEnd() {
 		account->getPhone()->StopRinging(this);
 

@@ -46,6 +46,8 @@ namespace tp {
 		virtual bool HoldCall();
 		virtual bool UnHoldCall();
 		virtual tp::HoldStatus HoldState();
+		virtual bool MuteCall();
+		virtual bool UnMuteCall();
 		virtual void onCallEnd();
 		virtual void Hangup();
 
